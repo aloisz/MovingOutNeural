@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Agent : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class Agent : MonoBehaviour
     [Space]
     [SerializeField] private float rayRange = 5;
     [SerializeField] private LayerMask layerMask;
-    //[SerializeField] private CarController _carController;
+    [SerializeField] private PlayerController playerController;
     [SerializeField] private Rigidbody rb;
     
     private float distanceTraveled;
@@ -48,7 +49,7 @@ public class Agent : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         
-        //_carController.Reset();
+        playerController.Reset();
         fitness = 0;
         totalCheckpointDist = 0;
         nextCheckpoint = CheckpointManager.Instance.firstCheckpoint;
@@ -113,8 +114,8 @@ public class Agent : MonoBehaviour
     private void OutputUpdate()
     {
         net.FeedForward(inputs);
-        //_carController.horizontalInput = net.neurons[^1][0];
-        //_carController.verticalInput = net.neurons[^1][1];
+        playerController.horizontalInput = net.neurons[^1][0];
+        playerController.verticalInput = net.neurons[^1][1];
     }
 
     [SerializeField] float isGoingWrongWay;
@@ -160,16 +161,16 @@ public class Agent : MonoBehaviour
 
     public void SetFirstMat()
     {
-        _meshRenderer.material = firstMat;
+        //_meshRenderer.material = firstMat;
     }
     
     public void SetDefaultMat()
     {
-        _meshRenderer.material = defaulttMat;
+        //_meshRenderer.material = defaulttMat;
     }
     public void SetMutatedMat()
     {
-        _meshRenderer.material = mutatedMat;
+        //_meshRenderer.material = mutatedMat;
     }
 
     [SerializeField] private float checkPoints;
