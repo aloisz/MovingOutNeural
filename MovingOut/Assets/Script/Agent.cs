@@ -89,7 +89,7 @@ public class Agent : MonoBehaviour
 
         inputs[5] = 1;
 
-        //inputs[6] = IsInteracting(pos + setUpPos, transform.forward, 2f);
+        inputs[6] = IsInteracting(pos + setUpPos, transform.forward, 2f);
     }
 
     private RaycastHit hit;
@@ -98,7 +98,7 @@ public class Agent : MonoBehaviour
         if (Physics.Raycast(origin, dir, out hit, rayRange * lenght, layerMask))
         {
             float value = 1 - hit.distance / (rayRange * lenght);
-            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
+            //Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
             return value;
         }
         else
@@ -111,7 +111,7 @@ public class Agent : MonoBehaviour
             return 0;
         }
     }
-
+    
     private float IsInteracting(Vector3 origin, Vector3 dir, float lenght)
     {
         float returnValue = 0f;
@@ -126,7 +126,7 @@ public class Agent : MonoBehaviour
             }
             else
             {
-                hit.transform.GetComponent<IInteractable>().DeInteract(this);
+                //hit.transform.GetComponent<IInteractable>().DeInteract(this);
                 returnValue = 0f;
             }
             Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));

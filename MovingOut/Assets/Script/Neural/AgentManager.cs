@@ -14,6 +14,8 @@ public class AgentManager : MonoBehaviour
     [SerializeField] private Transform agentGroup;
     [SerializeField] private CameraManager _cameraManager;
 
+    [Space] [SerializeField] private List<MyObj> myObjs;
+    
     [Space] 
     [SerializeField] private float mutationRate = .2f;
     [SerializeField] private float mutationPower = .1f;
@@ -27,13 +29,6 @@ public class AgentManager : MonoBehaviour
     
     private List<Agent> agents = new List<Agent>();
     private Agent agent;
-    
-    public static AgentManager Instance;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     void Start()
     {
@@ -111,6 +106,11 @@ public class AgentManager : MonoBehaviour
         foreach (var agent in agents)
         {
             agent.ResetAgent();
+        }
+
+        foreach (var myObj in myObjs)
+        {
+            myObj.ResetList();
         }
     }
 

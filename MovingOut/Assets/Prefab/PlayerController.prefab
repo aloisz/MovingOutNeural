@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   net:
-    layers: 06000000060000000600000002000000
+    layers: 07000000070000000700000002000000
   fitness: 0
   rayRange: 5
   layerMask:

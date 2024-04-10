@@ -23,7 +23,13 @@ public class Checkpoint : MonoBehaviour
                 agent.AddScoreByPassingCheckpoint(-200);
             }
         }
-        
+        if (other.TryGetComponent<MyObj>(out MyObj obj))
+        {
+            foreach (var agentt in obj.agents)
+            {
+                agentt.AddScoreByPassingCheckpoint(500);
+            }
+        }
         
     }
 }
