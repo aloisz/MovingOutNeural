@@ -83,7 +83,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forceBySpeed:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.13346228
+    - serializedVersion: 3
+      time: 43.561787
+      value: 0.7957101
+      inSlope: -0.08456826
+      outSlope: -0.08456826
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.3767917
+    - serializedVersion: 3
+      time: 50
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09671181
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -92,25 +119,105 @@ MonoBehaviour:
   isDrifting: 0
   centerOfMass: {fileID: 7300819051431096610}
   maxSteering: 45
-  steeringLerp: 20
-  driftingForce: 4
-  torqueStrengh: 0.001
-  torqueStrenghDrifting: 0.001
+  steeringLerp: 35
+  torqueStrengh: 0.1
+  torqueStrenghDrifting: 0.1
   antiTorque:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.034568787
+      value: 0.012420654
+      inSlope: 14.840931
+      outSlope: 14.840931
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.06666666
+      value: 0.488783
+      inSlope: -0.044651154
+      outSlope: -0.044651154
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.087010466
+    - serializedVersion: 3
+      time: 14
+      value: 0
+      inSlope: -0.03508012
+      outSlope: -0.03508012
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   torqueByVelocity:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: -20
+      value: -4
+      inSlope: 0.34092882
+      outSlope: 0.34092882
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.16098565
+    - serializedVersion: 3
+      time: -0.061098453
+      value: -0.01832962
+      inSlope: 0.053722873
+      outSlope: 0.053722873
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08857369
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 20
+      value: 4
+      inSlope: 0.36430445
+      outSlope: 0.36430445
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.10584949
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   driftBySpeed:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.16627353
+      outSlope: -0.16627353
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.011111111
+    - serializedVersion: 3
+      time: 0.29260182
+      value: 0.56685185
+      inSlope: -0.004589555
+      outSlope: -0.004589555
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.12701783
+    - serializedVersion: 3
+      time: 30
+      value: 0.5
+      inSlope: 0.0019293637
+      outSlope: 0.0019293637
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.12078973
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -136,7 +243,7 @@ CapsuleCollider:
   m_Radius: 0.71
   m_Height: 2.14
   m_Direction: 1
-  m_Center: {x: 0, y: 1.22, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4130301564740025037
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -162,7 +269,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 32
+  m_Constraints: 80
   m_CollisionDetection: 2
 --- !u!1001 &7875618247235873878
 PrefabInstance:
@@ -195,7 +302,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 54b4e8942421b804fb36004c24f040dd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2
+      value: 0.098
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 54b4e8942421b804fb36004c24f040dd,
         type: 3}

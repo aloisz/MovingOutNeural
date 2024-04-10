@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Script;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,8 +33,6 @@ public class Agent : MonoBehaviour
     [SerializeField] private Material mutatedMat;
     private void Start()
     {
-        //_meshRenderer = GetComponent<MeshRenderer>();
-        
         setUpPos = Vector3.up * 0.02f;
         transformForward = transform.forward;
         transformRight = transform.right;
@@ -89,6 +88,8 @@ public class Agent : MonoBehaviour
         inputs[4] = RaySensor(pos + setUpPos, transform.forward + -transform.right, 2f);
 
         inputs[5] = 1;
+
+        //inputs[6] = IsInteracting(pos + setUpPos, transform.forward, 2f);
     }
 
     private RaycastHit hit;
@@ -109,6 +110,28 @@ public class Agent : MonoBehaviour
             }
             return 0;
         }
+    }
+
+    private float IsInteracting(Vector3 origin, Vector3 dir, float lenght)
+    {
+        float returnValue = 0f;
+        if (Physics.Raycast(origin, dir, out hit, rayRange * lenght, layerMask))
+        {
+            float value = 1 - hit.distance / (rayRange * lenght);
+
+            if (hit.transform.GetComponent<IInteractable>() != null)
+            {
+                hit.transform.GetComponent<IInteractable>().Interact(this);
+                returnValue = 1f;
+            }
+            else
+            {
+                hit.transform.GetComponent<IInteractable>().DeInteract(this);
+                returnValue = 0f;
+            }
+            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
+        }
+        return returnValue;
     }
 
     private void OutputUpdate()
