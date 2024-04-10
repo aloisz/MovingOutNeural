@@ -20,11 +20,7 @@ public class Agent : MonoBehaviour
     public Transform nextCheckpoint;
     [SerializeField] private float nextCheckpointDist;
     
-    private float[] inputs;
-    
-    Vector3 setUpPos;
-    Vector3 transformForward;
-    Vector3 transformRight;
+    [SerializeField] float[] inputs;
 
     [SerializeField]private MeshRenderer _meshRenderer;
     [Space]
@@ -33,17 +29,13 @@ public class Agent : MonoBehaviour
     [SerializeField] private Material mutatedMat;
     private void Start()
     {
-        setUpPos = Vector3.up * 0.02f;
-        transformForward = transform.forward;
-        transformRight = transform.right;
-        
         IsTouched(false);
     }
 
-    public void ResetAgent()
+    public void ResetAgent(Vector3 offSet)
     {
         inputs = new float[net.layers[0]]; // Init input 
-        transform.position = Vector3.zero;
+        transform.position = offSet;
         transform.rotation = Quaternion.identity;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -72,9 +64,9 @@ public class Agent : MonoBehaviour
     private void InputUpdate()
     {
         pos = transform.position;
-        /*var setUpPos = Vector3.up * 0.02f;
+        var setUpPos = Vector3.up * 0.02f;
         var transformForward = transform.forward;
-        var transformRight = transform.right;*/
+        var transformRight = transform.right;
         
         // Front
         inputs[0] = RaySensor(pos + setUpPos, transform.forward, 4f);
@@ -98,7 +90,7 @@ public class Agent : MonoBehaviour
         if (Physics.Raycast(origin, dir, out hit, rayRange * lenght, layerMask))
         {
             float value = 1 - hit.distance / (rayRange * lenght);
-            //Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
+            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
             return value;
         }
         else

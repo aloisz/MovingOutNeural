@@ -15,6 +15,8 @@ public class AgentManager : MonoBehaviour
     [SerializeField] private CameraManager _cameraManager;
 
     [Space] [SerializeField] private List<MyObj> myObjs;
+    [Space] [SerializeField] private GameObject ldGo;
+    [SerializeField] private int numberOfLD = 10;
     
     [Space] 
     [SerializeField] private float mutationRate = .2f;
@@ -29,9 +31,17 @@ public class AgentManager : MonoBehaviour
     
     private List<Agent> agents = new List<Agent>();
     private Agent agent;
+    private Vector3 offSet;
 
     void Start()
     {
+        for (int i = 0; i < numberOfLD; i++)
+        {
+            Vector3 spacingOffset = new Vector3(100, 0,0);
+            GameObject ld = Instantiate(ldGo, transform.position, Quaternion.identity);
+            ld.transform.position += (spacingOffset) * i;
+            offSet = (spacingOffset) * i;
+        }
         StartCoroutine(Loop());
     }
 
@@ -103,9 +113,18 @@ public class AgentManager : MonoBehaviour
 
     private void ResetAgent()
     {
-        foreach (var agent in agents)
+        int count = 0;
+        Vector3 spacingOffset = Vector3.zero;
+        for (int i = 0; i < agents.Count; i++)
         {
-            agent.ResetAgent();
+            count++;
+            if (count >= agents.Count / numberOfLD)
+            {
+                count = 0;
+                spacingOffset += new Vector3(100, 2,0);
+            }
+            
+            agents[i].ResetAgent(spacingOffset);
         }
 
         foreach (var myObj in myObjs)
