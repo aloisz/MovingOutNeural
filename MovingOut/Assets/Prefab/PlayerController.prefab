@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   net:
-    layers: 07000000070000000700000002000000
+    layers: 07000000070000000700000003000000
   fitness: 0
   rayRange: 5
   layerMask:
@@ -60,10 +60,13 @@ MonoBehaviour:
   totalCheckpointDist: 0
   nextCheckpoint: {fileID: 0}
   nextCheckpointDist: 0
+  inputs: []
   _meshRenderer: {fileID: 8882164042947716923}
   firstMat: {fileID: 0}
   defaulttMat: {fileID: 0}
   mutatedMat: {fileID: 0}
+  dotProduct: 0
+  obj: {fileID: 0}
   isGoingWrongWay: 0
   isTouched: 0
   checkPoints: 0
@@ -114,9 +117,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  agent: {fileID: 3052101391026079728}
   horizontalInput: 0
   verticalInput: 0
-  isDrifting: 0
+  holdingInput: 0
   centerOfMass: {fileID: 7300819051431096610}
   maxSteering: 45
   steeringLerp: 35

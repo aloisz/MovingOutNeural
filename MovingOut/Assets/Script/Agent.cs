@@ -27,6 +27,13 @@ public class Agent : MonoBehaviour
     [SerializeField] private Material firstMat;
     [SerializeField] private Material defaulttMat;
     [SerializeField] private Material mutatedMat;
+
+    
+    [Space]
+    [SerializeField] private float dotProduct;
+    [SerializeField] private float crossMagnitude;
+    private Vector3 cross;
+    private Vector3 dirToTarget;
     private void Start()
     {
         IsTouchingObj(false);
@@ -51,6 +58,9 @@ public class Agent : MonoBehaviour
         checkPoints = 0;
         IsTouchingObj(false);
         RemainingTime = baseTime;
+
+        dotProduct = 0;
+        dirToTarget = Vector3.zero;
     }
 
     private void FixedUpdate()
@@ -103,7 +113,8 @@ public class Agent : MonoBehaviour
             return 0;
         }
     }
-    
+
+    [HideInInspector]public MyObj obj;
     private float IsInteracting(Vector3 origin, Vector3 dir, float lenght)
     {
         float returnValue = 0f;
@@ -112,7 +123,7 @@ public class Agent : MonoBehaviour
             float value = 1 - hit.distance / (rayRange * lenght);
 
             if (hit.transform.GetComponent<IInteractable>() != null)
-            {
+            { 
                 hit.transform.GetComponent<IInteractable>().Interact(this);
                 returnValue = 1f;
             }
@@ -130,19 +141,24 @@ public class Agent : MonoBehaviour
         net.FeedForward(inputs);
         playerController.horizontalInput = net.neurons[^1][0];
         playerController.verticalInput = net.neurons[^1][1];
+        playerController.holdingInput = net.neurons[^1][2];
     }
 
     [SerializeField] float isGoingWrongWay;
     private void FitnessUpdate()
     {
         //distanceTraveled = totalCheckpointDist + (nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude);
-
         //isGoingWrongWay = nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude;
         //if (fitness < distanceTraveled) fitness = distanceTraveled;
-        
         //RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
+
         
-        fitness = isGoingWrongWay + isTouched + checkPoints; // + RemainingTime
+        dirToTarget = Vector3.Normalize(nextCheckpoint.position - transform.position);
+        dotProduct = Vector3.Dot(transform.right, dirToTarget);
+        cross = Vector3.Cross(transform.right, dirToTarget);
+        crossMagnitude = cross.magnitude;
+        
+        fitness = dotProduct + crossMagnitude; // + RemainingTime isGoingWrongWay + isTouched + checkPoints + 
     }
 
     [SerializeField] float isTouched;

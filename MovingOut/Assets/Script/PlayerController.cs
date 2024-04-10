@@ -7,10 +7,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private AnimationCurve forceBySpeed;
+    [SerializeField] private Agent agent;
     
     public float horizontalInput;
     public float verticalInput;
-    public bool isDrifting;
+    public float holdingInput;
     
     [SerializeField] private Transform centerOfMass;
 
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         horizontalInput = 0;
         verticalInput = 0;
+        holdingInput = 0;
     }
 
     void FixedUpdate()
@@ -45,8 +47,15 @@ public class PlayerController : MonoBehaviour
         SetDirection();
         RotateVehicule();
         GoForward();
+        CatchObj();
         
         ShowDirection();
+    }
+
+    private void CatchObj()
+    {
+        if(!agent.obj) return;
+        agent.obj.transform.SetParent(holdingInput > .8f ? transform : null);
     }
 
     private void GetLocalVelocity()
