@@ -14,7 +14,7 @@ public class AgentManager : MonoBehaviour
     [SerializeField] private Transform agentGroup;
     [SerializeField] private CameraManager _cameraManager;
 
-    [Space] [SerializeField] private List<MyObj> myObjs;
+    [Space] public List<MyObj> myObjs = new List<MyObj>();
     [Space] [SerializeField] private GameObject ldGo;
     [SerializeField] private int numberOfLD = 10;
     
@@ -32,6 +32,14 @@ public class AgentManager : MonoBehaviour
     private List<Agent> agents = new List<Agent>();
     private Agent agent;
     private Vector3 offSet;
+
+    public static AgentManager Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
 
     void Start()
     {
@@ -118,13 +126,12 @@ public class AgentManager : MonoBehaviour
         for (int i = 0; i < agents.Count; i++)
         {
             count++;
+            agents[i].ResetAgent(spacingOffset);
             if (count >= agents.Count / numberOfLD)
             {
                 count = 0;
-                spacingOffset += new Vector3(100, 2,0);
+                spacingOffset += new Vector3(100, 0,0);
             }
-            
-            agents[i].ResetAgent(spacingOffset);
         }
 
         foreach (var myObj in myObjs)

@@ -29,7 +29,7 @@ public class Agent : MonoBehaviour
     [SerializeField] private Material mutatedMat;
     private void Start()
     {
-        IsTouched(false);
+        IsTouchingObj(false);
     }
 
     public void ResetAgent(Vector3 offSet)
@@ -49,7 +49,7 @@ public class Agent : MonoBehaviour
         isGoingWrongWay = 0;
         isTouched = 0;
         checkPoints = 0;
-        IsTouched(false);
+        IsTouchingObj(false);
         RemainingTime = baseTime;
     }
 
@@ -118,7 +118,6 @@ public class Agent : MonoBehaviour
             }
             else
             {
-                //hit.transform.GetComponent<IInteractable>().DeInteract(this);
                 returnValue = 0f;
             }
             Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
@@ -136,35 +135,34 @@ public class Agent : MonoBehaviour
     [SerializeField] float isGoingWrongWay;
     private void FitnessUpdate()
     {
-        distanceTraveled = totalCheckpointDist +
-                           (nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude);
+        //distanceTraveled = totalCheckpointDist + (nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude);
 
-        isGoingWrongWay = nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude;
+        //isGoingWrongWay = nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude;
         //if (fitness < distanceTraveled) fitness = distanceTraveled;
         
-        RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
+        //RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
         
-        fitness = isGoingWrongWay + isTouched + checkPoints + RemainingTime;
+        fitness = isGoingWrongWay + isTouched + checkPoints; // + RemainingTime
     }
 
     [SerializeField] float isTouched;
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.GetComponent<Collider>() != null)
+        if (other.transform.GetComponent<MyObj>() != null)
         {
-            IsTouched(true);
+            IsTouchingObj(true);
         }
     }
     
     private void OnCollisionExit(Collision other)
     {
-        IsTouched(false);
+        IsTouchingObj(false);
     }
 
-    private void IsTouched(bool touching)
+    private void IsTouchingObj(bool touching)
     {
-        if(touching) isTouched = -50;
-        else isTouched = +15;
+        if(touching) isTouched = 50;
+        else isTouched = -50;
     }
 
     public void CheckpointReached(Transform nextCheckpoint)

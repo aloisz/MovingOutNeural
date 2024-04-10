@@ -18,10 +18,6 @@ public class Checkpoint : MonoBehaviour
                 agent.CheckpointReached(nextCheckpoint);
                 agent.AddScoreByPassingCheckpoint(25);
             }
-            else
-            {
-                agent.AddScoreByPassingCheckpoint(-200);
-            }
         }
         if (other.TryGetComponent<MyObj>(out MyObj obj))
         {
