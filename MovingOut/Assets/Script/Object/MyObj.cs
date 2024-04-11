@@ -7,27 +7,24 @@ using UnityEngine;
 public class MyObj : MonoBehaviour, IInteractable
 {
     public List<Agent> agents;
-    private Vector3 baseTransform;
-    private Quaternion baseQuaternion;
+    public Vector3 baseTransform;
+    public Quaternion baseQuaternion;
 
     private void Awake()
     {
         AgentManager.Instance.myObjs.Add(this);
     }
 
-    private IEnumerator Start()
+
+    private void Start()
     {
-        yield return new WaitForSeconds(.2f);
-        ;
+        baseTransform = transform.localPosition;
+        baseQuaternion = transform.localRotation;
     }
 
     public void Interact(Agent agent)
     {
-        if(agents.Contains(agent)) return;
-        agents.Add(agent);
-        agent.obj = this;
-        agent.AddScoreByPassingCheckpoint(50);
-        StartCoroutine(RemoveAgent(agent));
+        
     }
 
     IEnumerator RemoveAgent(Agent agent)
@@ -43,11 +40,20 @@ public class MyObj : MonoBehaviour, IInteractable
         if (!isOn)
         {
             isOn = true;
-            baseTransform = transform.position;
-            baseQuaternion = transform.rotation;
+            baseTransform = transform.localPosition;
+            baseQuaternion = transform.localRotation;
+            
+            
+            Debug.Log(" (!isOn)");
         }
+        
+        
+        Debug.Log("        transform.localPosition = baseTransform;");
         agents.Clear();
-        transform.position = baseTransform;
-        transform.rotation = baseQuaternion;
+        transform.localPosition = baseTransform;
+        transform.localRotation = baseQuaternion;
+        transform.GetComponent<Collider>().enabled = true;
+        transform.GetComponent<Rigidbody>().isKinematic = false;
+        //transform.GetChild(0).transform.transform.position = Vector3.zero;
     }
 }

@@ -14,20 +14,14 @@ public class Agent : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Rigidbody rb;
     
-    private float distanceTraveled;
     [Space]
-    [SerializeField] private float totalCheckpointDist;
-    public Transform nextCheckpoint;
-    [SerializeField] private float nextCheckpointDist;
+    public Vector3 nextCheckpoint;
     
     [SerializeField] float[] inputs;
 
-    [SerializeField]private MeshRenderer _meshRenderer;
-    [Space]
-    [SerializeField] private Material firstMat;
-    [SerializeField] private Material defaulttMat;
-    [SerializeField] private Material mutatedMat;
+    public Vector3 basePosition;
 
+    public MyObj obj;
     
     [Space]
     [SerializeField] private float dotProduct;
@@ -36,31 +30,34 @@ public class Agent : MonoBehaviour
     private Vector3 dirToTarget;
     private void Start()
     {
-        IsTouchingObj(false);
+        //IsTouchingObj(false);
     }
 
-    public void ResetAgent(Vector3 offSet)
+    public void ResetAgent(Vector3 offSet, Transform checkpoint)
     {
         inputs = new float[net.layers[0]]; // Init input 
+        basePosition = transform.position;
         transform.position = offSet;
         transform.rotation = Quaternion.identity;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         
         playerController.Reset();
-        fitness = 0;
-        totalCheckpointDist = 0;
-        nextCheckpoint = CheckpointManager.Instance.firstCheckpoint;
-        nextCheckpointDist = (nextCheckpoint.position - transform.position).magnitude;
+        Debug.Log("     obj = null;");
+        obj = null;
+        nextCheckpoint = checkpoint.position; // posiiton de la caisse
 
         isGoingWrongWay = 0;
         isTouched = 0;
-        checkPoints = 0;
-        IsTouchingObj(false);
+        bonus = 0;
+        //IsTouchingObj(false);
         RemainingTime = baseTime;
 
         dotProduct = 0;
+        crossMagnitude = 0;
         dirToTarget = Vector3.zero;
+        cross = Vector3.zero;
+        fitness = 0;
     }
 
     private void FixedUpdate()
@@ -91,7 +88,11 @@ public class Agent : MonoBehaviour
 
         inputs[5] = 1;
 
-        inputs[6] = IsInteracting(pos + setUpPos, transform.forward, 2f);
+        inputs[6] = IsCatching(pos + setUpPos, transform.forward, .2f);
+
+        inputs[7] = Dot();
+
+        inputs[8] = Cross();
     }
 
     private RaycastHit hit;
@@ -113,27 +114,30 @@ public class Agent : MonoBehaviour
             return 0;
         }
     }
-
-    [HideInInspector]public MyObj obj;
-    private float IsInteracting(Vector3 origin, Vector3 dir, float lenght)
+    
+    private float IsCatching(Vector3 origin, Vector3 dir, float lenght)
     {
         float returnValue = 0f;
         if (Physics.Raycast(origin, dir, out hit, rayRange * lenght, layerMask))
         {
-            float value = 1 - hit.distance / (rayRange * lenght);
-
-            if (hit.transform.GetComponent<IInteractable>() != null)
-            { 
-                hit.transform.GetComponent<IInteractable>().Interact(this);
-                returnValue = 1f;
-            }
-            else
-            {
-                returnValue = 0f;
-            }
-            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
+            returnValue = hit.transform.GetComponent<IInteractable>() != null ? 1 : 0f;
+            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, 1 ));
         }
         return returnValue;
+    }
+
+    private float Dot()
+    {  
+        dirToTarget = Vector3.Normalize(nextCheckpoint - transform.position);
+        dotProduct = Vector3.Dot(transform.forward, dirToTarget);
+        return dotProduct;
+    }
+    
+    private float Cross()
+    {  
+        cross = Vector3.Cross(transform.forward, dirToTarget.normalized);
+        crossMagnitude = cross.y;
+        return crossMagnitude;
     }
 
     private void OutputUpdate()
@@ -147,18 +151,20 @@ public class Agent : MonoBehaviour
     [SerializeField] float isGoingWrongWay;
     private void FitnessUpdate()
     {
-        //distanceTraveled = totalCheckpointDist + (nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude);
-        //isGoingWrongWay = nextCheckpointDist - (nextCheckpoint.position - transform.position).magnitude;
+        isGoingWrongWay = 1 - nextCheckpoint.magnitude / (nextCheckpoint -  transform.position).magnitude;
+        float velocityValue = 0f;
+        if (rb.velocity.magnitude < 15)
+        {
+            velocityValue -= 150;
+        }
+        else
+        {
+            velocityValue += 10;
+        }
         //if (fitness < distanceTraveled) fitness = distanceTraveled;
         //RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
-
         
-        dirToTarget = Vector3.Normalize(nextCheckpoint.position - transform.position);
-        dotProduct = Vector3.Dot(transform.right, dirToTarget);
-        cross = Vector3.Cross(transform.right, dirToTarget);
-        crossMagnitude = cross.magnitude;
-        
-        fitness = dotProduct + crossMagnitude; // + RemainingTime isGoingWrongWay + isTouched + checkPoints + 
+        fitness = -isGoingWrongWay * 10 + bonus + velocityValue; // (dotProduct * 3) + crossMagnitude  + 
     }
 
     [SerializeField] float isTouched;
@@ -166,13 +172,13 @@ public class Agent : MonoBehaviour
     {
         if (other.transform.GetComponent<MyObj>() != null)
         {
-            IsTouchingObj(true);
+            //IsTouchingObj(true);
         }
     }
     
     private void OnCollisionExit(Collision other)
     {
-        IsTouchingObj(false);
+        //IsTouchingObj(false);
     }
 
     private void IsTouchingObj(bool touching)
@@ -181,12 +187,6 @@ public class Agent : MonoBehaviour
         else isTouched = -50;
     }
 
-    public void CheckpointReached(Transform nextCheckpoint)
-    {
-        totalCheckpointDist += nextCheckpointDist;
-        this.nextCheckpoint = nextCheckpoint;
-        nextCheckpointDist = (nextCheckpoint.position - transform.position).magnitude;
-    }
 
     public void SetFirstMat()
     {
@@ -202,10 +202,10 @@ public class Agent : MonoBehaviour
         //_meshRenderer.material = mutatedMat;
     }
 
-    [SerializeField] private float checkPoints;
-    public float AddScoreByPassingCheckpoint(float points)
+    [FormerlySerializedAs("checkPoints")] [SerializeField] private float bonus;
+    public float Bonus(float points)
     {
-        return this.checkPoints += points;
+        return this.bonus += points;
     }
 
     [SerializeField] private float baseTime = 5;

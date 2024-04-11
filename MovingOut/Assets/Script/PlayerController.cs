@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private Transform holdingPoint;
     [SerializeField] private AnimationCurve forceBySpeed;
     [SerializeField] private Agent agent;
     
@@ -55,7 +56,11 @@ public class PlayerController : MonoBehaviour
     private void CatchObj()
     {
         if(!agent.obj) return;
-        agent.obj.transform.SetParent(holdingInput > .8f ? transform : null);
+        agent.obj.GetComponent<Rigidbody>().isKinematic = true;
+        agent.obj.GetComponent<Collider>().enabled = false;
+        agent.obj.transform.position = holdingPoint.position;
+        
+        agent.nextCheckpoint = agent.basePosition;
     }
 
     private void GetLocalVelocity()

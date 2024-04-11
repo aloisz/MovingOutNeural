@@ -10,7 +10,7 @@ public class Checkpoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Agent>(out Agent agent))
+    /*    if (other.TryGetComponent<Agent>(out Agent agent))
         {
             if(agent.nextCheckpoint == transform)
             {
@@ -26,6 +26,6 @@ public class Checkpoint : MonoBehaviour
                 agentt.AddScoreByPassingCheckpoint(500);
             }
         }
-        
+        */
     }
 }

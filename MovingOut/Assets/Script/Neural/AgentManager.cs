@@ -39,8 +39,7 @@ public class AgentManager : MonoBehaviour
     {
         Instance = this;
     }
-
-
+    
     void Start()
     {
         for (int i = 0; i < numberOfLD; i++)
@@ -126,7 +125,7 @@ public class AgentManager : MonoBehaviour
         for (int i = 0; i < agents.Count; i++)
         {
             count++;
-            agents[i].ResetAgent(spacingOffset);
+            agents[i].ResetAgent(spacingOffset, myObjs[i].transform);
             if (count >= agents.Count / numberOfLD)
             {
                 count = 0;
@@ -134,6 +133,8 @@ public class AgentManager : MonoBehaviour
             }
         }
 
+        
+        Debug.Log("    foreach (var myObj in myObjs)");
         foreach (var myObj in myObjs)
         {
             myObj.ResetList();
