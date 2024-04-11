@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   net:
-    layers: 09000000090000000900000003000000
+    layers: 0a0000000a0000000a00000003000000
   fitness: 0
   rayRange: 5
   layerMask:
@@ -58,18 +58,19 @@ MonoBehaviour:
     m_Bits: 1
   playerController: {fileID: 3957842002376269514}
   rb: {fileID: 4130301564740025037}
-  totalCheckpointDist: 0
   nextCheckpoint: {x: 0, y: 0, z: 0}
-  nextCheckpointDist: 0
+  velocityValue: 0
   inputs: []
   basePosition: {x: 0, y: 0, z: 0}
   obj: {fileID: 0}
   dotProduct: 0
   crossMagnitude: 0
   isGoingWrongWay: 0
+  valuevelocity: 0
+  colliderValue: 0
   isTouched: 0
-  checkPoints: 0
-  baseTime: 50
+  bonus: 0
+  baseTime: 0
   RemainingTime: 5
 --- !u!114 &3957842002376269514
 MonoBehaviour:

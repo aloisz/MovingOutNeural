@@ -13,7 +13,8 @@ public class ObjDetection : MonoBehaviour
         {
             obj.agents.Add(other.GetComponent<Agent>());
             other.GetComponent<Agent>().obj = obj;
-            other.GetComponent<Agent>().Bonus(100);
+            other.GetComponent<Agent>().Bonus(10000);
+            other.GetComponent<Agent>().ResetTimer();
             //other.GetComponent<Agent>().nextCheckpoint = other.GetComponent<Agent>().basePosition;
         }
     }

@@ -120,7 +120,6 @@ public class AgentManager : MonoBehaviour
 
     private void ResetAgent()
     {
-        Debug.Log("    foreach (var myObj in myObjs)");
         foreach (var myObj in myObjs)
         {
             myObj.ResetList();

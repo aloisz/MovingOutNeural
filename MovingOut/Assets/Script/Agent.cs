@@ -59,6 +59,10 @@ public class Agent : MonoBehaviour
         dirToTarget = Vector3.zero;
         cross = Vector3.zero;
         velocityValue = 0;
+
+        colliderValue = 0;
+        valuevelocity = 0;
+        
         fitness = 0;
     }
 
@@ -95,6 +99,8 @@ public class Agent : MonoBehaviour
         inputs[7] = Dot();
 
         inputs[8] = Cross();
+
+        inputs[9] = RaySensorCollider(pos + setUpPos, transform.forward, 2f);
     }
 
     private RaycastHit hit;
@@ -108,11 +114,8 @@ public class Agent : MonoBehaviour
         }
         else
         {
-            if (Physics.Raycast(origin, dir, out hit, rayRange * lenght, layerMask))
-            {
-                float value = 1 - hit.distance / (rayRange * lenght);
-                Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.red, value));
-            }
+            float value = 1 - hit.distance / (rayRange * lenght);
+            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
             return 0;
         }
     }
@@ -128,6 +131,24 @@ public class Agent : MonoBehaviour
         return returnValue;
     }
 
+    private float RaySensorCollider(Vector3 origin, Vector3 dir, float lenght)
+    {
+        
+        if (Physics.Raycast(origin, dir, out hit, rayRange * lenght, layerMask))
+        {
+            if (hit.transform.GetComponent<Collider>() != null)
+            {
+                isTouched = -1f;
+                Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, isTouched));
+            }
+            
+        }
+        else isTouched = 1f;
+        
+        return isTouched;
+    }
+    
+            
     private float Dot()
     {  
         dirToTarget = Vector3.Normalize(nextCheckpoint - transform.position);
@@ -151,27 +172,33 @@ public class Agent : MonoBehaviour
     }
 
     [SerializeField] float isGoingWrongWay;
+    [SerializeField] float valuevelocity;
+    [SerializeField] float colliderValue;
     private void FitnessUpdate()
     {
-        isGoingWrongWay =  (nextCheckpoint.magnitude / (nextCheckpoint -  transform.position).magnitude) / 100;
-        if (rb.velocity.magnitude < 10)
+        isGoingWrongWay = 1 -  (nextCheckpoint -  transform.position).magnitude;
+        if (rb.velocity.magnitude > 10f)
         {
-            velocityValue -= 5;
+            velocityValue += transform.position.magnitude;
         }
         else
         {
-            velocityValue += 5;
+            velocityValue -= transform.position.magnitude;
         }
-        //if (fitness < distanceTraveled) fitness = distanceTraveled;
-        //RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
+
+        valuevelocity = Mathf.Clamp(velocityValue, -100, 10);
+        colliderValue = isTouched;
         
-        fitness = isGoingWrongWay + bonus ; // (dotProduct * 3) + crossMagnitude  + 
+        //if (fitness < distanceTraveled) fitness = distanceTraveled;
+        RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
+        
+        fitness = isGoingWrongWay + bonus  + colliderValue*30 + valuevelocity + RemainingTime; // (dotProduct * 3) + crossMagnitude  + 
     }
 
     [SerializeField] float isTouched;
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.GetComponent<MyObj>() != null)
+        if (other.transform.GetComponent<Collider>() != null)
         {
             //IsTouchingObj(true);
         }
@@ -184,8 +211,8 @@ public class Agent : MonoBehaviour
 
     private void IsTouchingObj(bool touching)
     {
-        if(touching) isTouched = 50;
-        else isTouched = -50;
+        if(touching) isTouched -= 50;
+        else isTouched += 50;
     }
 
 

@@ -185,8 +185,8 @@ MonoBehaviour:
   myObjs: []
   ldGo: {fileID: 3287557883790055059, guid: 58bb8865dccf9a34db96d9679a825071, type: 3}
   numberOfLD: 100
-  mutationRate: 0.5
-  mutationPower: 0.5
+  mutationRate: 0.2
+  mutationPower: 0.1
   generationCount: 0
   generationCountTxt: {fileID: 1324336538}
   timeElapsed: 0
