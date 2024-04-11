@@ -221,6 +221,10 @@ MonoBehaviour:
   agents: []
   baseTransform: {x: 0, y: 0, z: 0}
   baseQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  bonusTriigers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!65 &1864830543659540361
 BoxCollider:
   m_ObjectHideFlags: 0

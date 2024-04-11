@@ -50,9 +50,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   net:
-    layers: 0a0000000a0000000a00000003000000
+    layers: 0b0000000b0000000b00000003000000
   fitness: 0
-  rayRange: 5
+  raylenght: 3
+  rayRange: 10
   layerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -119,6 +120,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   agent: {fileID: 3052101391026079728}
+  isMoving: 0
   horizontalInput: 0
   verticalInput: 0
   holdingInput: 0
@@ -233,7 +235,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3953515274708055798}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 4e9435b7258773b44a8c0f77b9a59bb6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

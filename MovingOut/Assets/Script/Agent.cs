@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Script;
@@ -8,6 +9,8 @@ public class Agent : MonoBehaviour
 {
     public NeuralNetwork net;
     public float fitness;
+
+    [SerializeField] private float raylenght = 10;
     [Space]
     [SerializeField] private float rayRange = 5;
     [SerializeField] private LayerMask layerMask;
@@ -29,9 +32,13 @@ public class Agent : MonoBehaviour
     [SerializeField] private float crossMagnitude;
     private Vector3 cross;
     private Vector3 dirToTarget;
+
+    private Vector3 transformForward;
+    private Vector3 transformRight;
     private void Start()
     {
-        //IsTouchingObj(false);
+        transformForward = transform.forward;
+        transformRight = transform.right;
     }
 
     public void ResetAgent(Vector3 offSet, Transform checkpoint)
@@ -44,14 +51,13 @@ public class Agent : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         
         playerController.Reset();
-        Debug.Log("     obj = null;");
         obj = null;
         nextCheckpoint = checkpoint.position; // posiiton de la caisse
 
         isGoingWrongWay = 0;
         isTouched = 0;
         bonus = 0;
-        //IsTouchingObj(false);
+        IsTouchingObj(false);
         RemainingTime = baseTime;
 
         dotProduct = 0;
@@ -78,27 +84,30 @@ public class Agent : MonoBehaviour
     {
         pos = transform.position;
         var setUpPos = Vector3.up * 0.02f;
-        var transformForward = transform.forward;
-        var transformRight = transform.right;
         
         // Front
-        inputs[0] = RaySensor(pos + setUpPos, transform.forward, 4f);
+        inputs[0] = RaySensor(pos + setUpPos, transformForward, raylenght);
         
         // Sides
-        inputs[1] = RaySensor(pos + setUpPos, transform.right, 1.5f);
-        inputs[2] = RaySensor(pos + setUpPos, -transform.right, 1.5f);
+        
+        
+        inputs[1] = RaySensor(pos + setUpPos, transformRight, raylenght);
+        inputs[2] = RaySensor(pos + setUpPos, -transformRight, raylenght);
         
         // Diagonals
-        inputs[3] = RaySensor(pos + setUpPos, transform.forward + transform.right, 2f);
-        inputs[4] = RaySensor(pos + setUpPos, transform.forward + -transform.right, 2f);
+        inputs[3] = RaySensor(pos + setUpPos, transformForward + transformRight, raylenght);
+        inputs[4] = RaySensor(pos + setUpPos, transformForward + -transformRight, raylenght);
+        
+        // back
+        inputs[5] = RaySensor(pos + setUpPos, -transformForward, raylenght);
 
-        inputs[5] = 1;
+        inputs[6] = 1;
 
-        inputs[6] = IsCatching(pos + setUpPos, transform.forward, .2f);
+        inputs[7] = IsCatching(pos + setUpPos, transform.forward, .2f);
 
-        inputs[7] = Dot();
+        inputs[8] = Dot();
 
-        inputs[8] = Cross();
+        inputs[9] = Cross();
 
         inputs[9] = RaySensorCollider(pos + setUpPos, transform.forward, 2f);
     }
@@ -106,18 +115,13 @@ public class Agent : MonoBehaviour
     private RaycastHit hit;
     private float RaySensor(Vector3 origin, Vector3 dir, float lenght)
     {
+        float value = 0;
         if (Physics.Raycast(origin, dir, out hit, rayRange * lenght, layerMask))
         {
-            float value = 1 - hit.distance / (rayRange * lenght);
-            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
-            return value;
+            value = 1 - hit.distance / (rayRange * lenght);
+            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.green, Color.red, value));
         }
-        else
-        {
-            float value = 1 - hit.distance / (rayRange * lenght);
-            Debug.DrawRay(origin, dir * hit.distance, Color.Lerp(Color.red, Color.green, value));
-            return 0;
-        }
+        return value;
     }
     
     private float IsCatching(Vector3 origin, Vector3 dir, float lenght)
@@ -176,8 +180,8 @@ public class Agent : MonoBehaviour
     [SerializeField] float colliderValue;
     private void FitnessUpdate()
     {
-        isGoingWrongWay = 1 -  (nextCheckpoint -  transform.position).magnitude;
-        if (rb.velocity.magnitude > 10f)
+        isGoingWrongWay = 1 - (nextCheckpoint -  transform.position).magnitude;
+        if (transform.position.magnitude >20)
         {
             velocityValue += transform.position.magnitude;
         }
@@ -192,21 +196,16 @@ public class Agent : MonoBehaviour
         //if (fitness < distanceTraveled) fitness = distanceTraveled;
         RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
         
-        fitness = isGoingWrongWay + bonus  + colliderValue*30 + valuevelocity + RemainingTime; // (dotProduct * 3) + crossMagnitude  + 
+        fitness =  bonus + isGoingWrongWay + RemainingTime; //+ colliderValue
     }
 
     [SerializeField] float isTouched;
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.GetComponent<Collider>() != null)
+        if (LayerMask.GetMask(LayerMask.LayerToName(other.gameObject.layer)) == layerMask)
         {
             //IsTouchingObj(true);
         }
-    }
-    
-    private void OnCollisionExit(Collision other)
-    {
-        //IsTouchingObj(false);
     }
 
     private void IsTouchingObj(bool touching)
@@ -241,5 +240,10 @@ public class Agent : MonoBehaviour
     public void ResetTimer()
     {
         RemainingTime = baseTime;
+    }
+
+    private void OnDrawGizmos()
+    {
+        
     }
 }

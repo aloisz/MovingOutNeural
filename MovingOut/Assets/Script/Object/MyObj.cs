@@ -9,6 +9,7 @@ public class MyObj : MonoBehaviour, IInteractable
     public List<Agent> agents;
     public Vector3 baseTransform;
     public Quaternion baseQuaternion;
+    public List<BonusTriiger> bonusTriigers;
 
     private void Awake()
     {
@@ -43,17 +44,18 @@ public class MyObj : MonoBehaviour, IInteractable
             baseTransform = transform.localPosition;
             baseQuaternion = transform.localRotation;
             
-            
-            Debug.Log(" (!isOn)");
         }
         
-        
-        Debug.Log("        transform.localPosition = baseTransform;");
         agents.Clear();
         transform.localPosition = baseTransform;
         transform.localRotation = baseQuaternion;
         transform.GetComponent<Collider>().enabled = true;
         transform.GetComponent<Rigidbody>().isKinematic = false;
         //transform.GetChild(0).transform.transform.position = Vector3.zero;
+
+        foreach (var bonus in bonusTriigers)
+        {
+            bonus.isPassed = false;
+        }
     }
 }

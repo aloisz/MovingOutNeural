@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform holdingPoint;
     [SerializeField] private AnimationCurve forceBySpeed;
     [SerializeField] private Agent agent;
-    
+
+    public bool isMoving;
     public float horizontalInput;
     public float verticalInput;
     public float holdingInput;
@@ -49,6 +50,9 @@ public class PlayerController : MonoBehaviour
         RotateVehicule();
         GoForward();
         CatchObj();
+
+        if (horizontalInput > .5f || verticalInput > .5f) isMoving = true;
+        else isMoving = false;
         
         ShowDirection();
     }
