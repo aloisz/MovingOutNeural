@@ -120,6 +120,12 @@ public class AgentManager : MonoBehaviour
 
     private void ResetAgent()
     {
+        Debug.Log("    foreach (var myObj in myObjs)");
+        foreach (var myObj in myObjs)
+        {
+            myObj.ResetList();
+        }
+        
         int count = 0;
         Vector3 spacingOffset = Vector3.zero;
         for (int i = 0; i < agents.Count; i++)
@@ -131,13 +137,6 @@ public class AgentManager : MonoBehaviour
                 count = 0;
                 spacingOffset += new Vector3(100, 0,0);
             }
-        }
-
-        
-        Debug.Log("    foreach (var myObj in myObjs)");
-        foreach (var myObj in myObjs)
-        {
-            myObj.ResetList();
         }
     }
 

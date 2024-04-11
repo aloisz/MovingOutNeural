@@ -16,6 +16,7 @@ public class Agent : MonoBehaviour
     
     [Space]
     public Vector3 nextCheckpoint;
+    public float velocityValue = 0f;
     
     [SerializeField] float[] inputs;
 
@@ -36,8 +37,8 @@ public class Agent : MonoBehaviour
     public void ResetAgent(Vector3 offSet, Transform checkpoint)
     {
         inputs = new float[net.layers[0]]; // Init input 
-        basePosition = transform.position;
         transform.position = offSet;
+        basePosition = transform.position;
         transform.rotation = Quaternion.identity;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -57,6 +58,7 @@ public class Agent : MonoBehaviour
         crossMagnitude = 0;
         dirToTarget = Vector3.zero;
         cross = Vector3.zero;
+        velocityValue = 0;
         fitness = 0;
     }
 
@@ -151,20 +153,19 @@ public class Agent : MonoBehaviour
     [SerializeField] float isGoingWrongWay;
     private void FitnessUpdate()
     {
-        isGoingWrongWay = 1 - nextCheckpoint.magnitude / (nextCheckpoint -  transform.position).magnitude;
-        float velocityValue = 0f;
-        if (rb.velocity.magnitude < 15)
+        isGoingWrongWay =  (nextCheckpoint.magnitude / (nextCheckpoint -  transform.position).magnitude) / 100;
+        if (rb.velocity.magnitude < 10)
         {
-            velocityValue -= 150;
+            velocityValue -= 5;
         }
         else
         {
-            velocityValue += 10;
+            velocityValue += 5;
         }
         //if (fitness < distanceTraveled) fitness = distanceTraveled;
         //RemainingTime -= (Time.fixedDeltaTime % 60) * 10;
         
-        fitness = -isGoingWrongWay * 10 + bonus + velocityValue; // (dotProduct * 3) + crossMagnitude  + 
+        fitness = isGoingWrongWay + bonus ; // (dotProduct * 3) + crossMagnitude  + 
     }
 
     [SerializeField] float isTouched;
